@@ -36,35 +36,10 @@ See doc/COPYRIGHT.rdoc for more details.
     <% end %>
   </li>
 <% end %>
-<div class="attributes-group">
-  <div class="attributes-group--header">
-      <div class="attributes-group--header-container">
-          <h3 class="attributes-group--header-text"><%= l(:label_information) %></h3>
-      </div>
-  </div>
-  <dl class="attributes-key-value">
-      <dt class="attributes-key-value--key"><%= l(:label_project_count) %></dt>
-      <dd class="attributes-key-value--value-container">
-          <div class="attributes-key-value--value -text">
-              <span title="<%= l(:label_project_count) %>">
-                <%= l(:label_x_projects, :count => Project.count) %>
-              </span>
-          </div>
-      </dd>
-      <dt class="attributes-key-value--key"><%= l(:label_required_disk_storage) %></dt>
-      <dd class="attributes-key-value--value-container">
-          <div class="attributes-key-value--value -text">
-              <span title="0">
-                <%= number_to_human_size(Project.total_projects_size, precision: 2) %>
-              </span>
-          </div>
-      </dd>
-  </dl>
-</div>
 <%= form_tag({}, :method => :get) do %>
   <fieldset class="simple-filters--container">
     <legend><%= l(:label_filter_plural) %></legend>
-    <ul class="simple-filters--filters">
+    <ul class="simple-filters--filters -columns-3">
       <li class="simple-filters--filter">
           <label for='status'><%= Project.human_attribute_name(:status) %> :</label>
           <%= select_tag 'status', project_status_options_for_select(@status), :onchange => "this.form.submit(); return false;"  %>
@@ -73,14 +48,21 @@ See doc/COPYRIGHT.rdoc for more details.
           <label for='name'><%= Project.model_name.human %>:</label>
           <%= text_field_tag 'name', params[:name] %>
       </li>
+      <li class="simple-filters--filter">
+        <label for='' aria-visible="false" style="visibility: hidden"><%= l(:button_apply) %></label>
+        <%= submit_tag l(:button_apply), :class => 'button -highlight', :name => nil %>
+      </li>
     </ul>
-    <div class="simple-filters--controls">
-      <%= submit_tag l(:button_apply), :class => 'button -highlight -small', :name => nil %>
-      <%= link_to l(:button_clear), {:controller => '/admin', :action => 'projects'}, :class => 'button -small -with-icon icon-undo' %>
-    </div>
   </fieldset>
 <% end %>
-&nbsp;
+<div class="projects-table--storage">
+  <p>
+    <i class="icon-info"></i>
+    <%= l(:label_projects_storage_information,
+          count: Project.count,
+          storage: number_to_human_size(Project.total_projects_size, precision: 2)) %>
+  </p>
+</div>
 <div class="generic-table--container">
   <div class="generic-table--results-container">
     <table role="grid" class="generic-table">
@@ -96,18 +78,15 @@ See doc/COPYRIGHT.rdoc for more details.
           <th>
             <div class="generic-table--sort-header-outer">
               <div class="generic-table--sort-header">
-                <span>
-                  <%=  Project.model_name.human %>
-                </span>
+                <%= sort_header_tag_with_lsg('name', caption: Project.model_name.human) %>
               </div>
             </div>
           </th>
-          <th>            
+          <th>
             <div class="generic-table--sort-header-outer">
               <div class="generic-table--sort-header">
-                <span>
-                  <%=  Project.human_attribute_name(:is_public) %>                
-                </span>
+                <%= sort_header_tag_with_lsg('is_public',
+                                             caption: Project.human_attribute_name(:is_public)) %>
               </div>
             </div>
           </th>
@@ -123,9 +102,8 @@ See doc/COPYRIGHT.rdoc for more details.
           <th>
             <div class="generic-table--sort-header-outer">
               <div class="generic-table--sort-header">
-                <span>
-                  <%=  Project.human_attribute_name(:created_on) %>
-                </span>
+                <%= sort_header_tag_with_lsg('created_on',
+                                             caption: Project.human_attribute_name(:created_on)) %>
               </div>
             </div>
           </th>
@@ -133,7 +111,7 @@ See doc/COPYRIGHT.rdoc for more details.
         </tr>
       </thead>
       <tbody>
-        <% project_tree(@projects) do |project, level| %>
+        <% project_tree_when_sorted(@projects) do |project, level| %>
           <tr class="<%= project.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
             <td class="name"><span><%= link_to project, settings_project_path(project), :title => project.short_description %></span></td>
             <td><%= checked_image project.is_public? %></td>
@@ -162,5 +140,6 @@ See doc/COPYRIGHT.rdoc for more details.
       </tbody>
     </table>
     <div class="generic-table--header-background"></div>
+    <%= pagination_links_full @projects %>
   </div>
 </div>

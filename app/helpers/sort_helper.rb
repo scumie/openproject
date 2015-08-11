@@ -81,6 +81,8 @@
 
 module SortHelper
   class SortCriteria
+    attr_reader :criteria
+
     def initialize
       @criteria = []
     end
@@ -214,6 +216,12 @@ module SortHelper
     @sort_criteria.to_sql
   end
 
+  # Determines whether the current selected sort criteria
+  # is identical to the default
+  def default_sort_order?
+    @sort_default == @sort_criteria.criteria
+  end
+
   # Returns a link which sorts by the named column.
   #
   # - column is the name of an attribute in the sorted record collection.
@@ -269,5 +277,15 @@ module SortHelper
     end
 
     content_tag('th', sort_link(column, caption, default_order, lang: lang), options)
+  end
+
+  # Returns a table header tag similar to +sort_header_tag+, but
+  # according to the LSG table component.
+  def sort_header_tag_with_lsg(column, options = {})
+    caption = options.delete(:caption) || column.to_s.humanize
+    default_order = options.delete(:default_order) || 'asc'
+    lang = options.delete(:lang) || nil
+
+    sort_link(column, caption, default_order, lang: lang)
   end
 end
