@@ -71,6 +71,7 @@ See doc/COPYRIGHT.rdoc for more details.
         <col highlight-col>
         <col highlight-col>
         <col highlight-col>
+        <col highlight-col>
         <col>
       </colgroup>
       <thead>
@@ -107,6 +108,14 @@ See doc/COPYRIGHT.rdoc for more details.
               </div>
             </div>
           </th>
+          <th>
+            <div class="generic-table--sort-header-outer">
+              <div class="generic-table--sort-header">
+                <%= sort_header_tag_with_lsg('updated_on',
+                                             caption: I18n.t(:label_last_activity)) %>
+              </div>
+            </div>
+          </th>
           <th></th>
         </tr>
       </thead>
@@ -118,6 +127,7 @@ See doc/COPYRIGHT.rdoc for more details.
             <td><%= render partial: '/storage/required_storage',
                                           locals: { storage: project.required_storage} %></td>
             <td><%= format_date(project.created_on) %></td>
+            <td><%= format_date(project.updated_on) %></td>
             <td class="buttons">
               <%= link_to(l(:button_archive),
                   archive_project_path(project, :status => params[:status]),

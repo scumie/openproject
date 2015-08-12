@@ -811,6 +811,7 @@ en:
   label_journal_diff: "Description Comparison"
   label_jump_to_a_project: "Jump to a project..."
   label_language_based: "Based on user's language"
+  label_last_activity: "Last activity"
   label_last_changes: "last %{count} changes"
   label_last_login: "Last login"
   label_last_month: "last month"
