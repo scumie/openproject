@@ -73,18 +73,10 @@ See doc/COPYRIGHT.rdoc for more details.
         <col highlight-col>
         <col highlight-col>
         <col highlight-col>
-        <col highlight-col>
         <col>
       </colgroup>
       <thead>
         <tr>
-          <th>
-            <div class="generic-table--sort-header-outer">
-              <div class="generic-table--sort-header">
-                <%= sort_header_tag_with_lsg('lft', caption: I18n.t(:label_project_hierarchy)) %>
-              </div>
-            </div>
-          </th>
           <th>
             <div class="generic-table--sort-header-outer">
               <div class="generic-table--sort-header">
@@ -131,8 +123,7 @@ See doc/COPYRIGHT.rdoc for more details.
       <tbody>
         <% project_tree_when_sorted(@projects) do |project, level| %>
           <tr class="<%= project.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
-            <td class="lft project--hierarchy"><span></span></td>
-            <td class="name"><span><%= link_to project, settings_project_path(project), :title => project.short_description %></span></td>
+            <td class="name project--hierarchy"><span><%= link_to project, settings_project_path(project), :title => project.short_description %></span></td>
             <td><%= checked_image project.is_public? %></td>
             <td><%= render partial: '/storage/required_storage',
                                           locals: { storage: project.required_storage,
