@@ -249,6 +249,7 @@ module ApplicationHelper
   end
 
   # Returns a lft-sorted project hierarchy only when
+  # the sort helper has deemed a non-default sort option to be selected.
   def project_tree_when_sorted(projects, &block)
     if default_sort_order?
       project_tree(projects, &block)

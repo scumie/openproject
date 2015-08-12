@@ -41,7 +41,7 @@ See doc/COPYRIGHT.rdoc for more details.
     <legend><%= l(:label_filter_plural) %></legend>
     <ul class="simple-filters--filters -columns-3">
       <li class="simple-filters--filter">
-          <label for='status'><%= Project.human_attribute_name(:status) %> :</label>
+          <label for='status'><%= Project.human_attribute_name(:status) %>:</label>
           <%= select_tag 'status', project_status_options_for_select(@status), :onchange => "this.form.submit(); return false;"  %>
       </li>
       <li class="simple-filters--filter">
@@ -49,20 +49,21 @@ See doc/COPYRIGHT.rdoc for more details.
           <%= text_field_tag 'name', params[:name] %>
       </li>
       <li class="simple-filters--filter">
+        <%# TODO: This label is an ugly hack to quickly align the button with the filters.
+            Delete this as soon as the simple filters LSG is refactored to match that visual.
+         %>
         <label for='' aria-visible="false" style="visibility: hidden"><%= l(:button_apply) %></label>
         <%= submit_tag l(:button_apply), :class => 'button -highlight', :name => nil %>
       </li>
     </ul>
   </fieldset>
 <% end %>
-<div class="projects-table--storage">
-  <p>
-    <i class="icon-info"></i>
-    <%= l(:label_projects_storage_information,
-          count: Project.count,
-          storage: number_to_human_size(Project.total_projects_size, precision: 2)) %>
-  </p>
-</div>
+<p class="information-section">
+  <i class="icon-info"></i>
+  <%= l(:label_projects_storage_information,
+        count: Project.count,
+        storage: number_to_human_size(Project.total_projects_size, precision: 2)) %>
+</p>
 <div class="generic-table--container">
   <div class="generic-table--results-container">
     <table role="grid" class="generic-table">
@@ -72,10 +73,18 @@ See doc/COPYRIGHT.rdoc for more details.
         <col highlight-col>
         <col highlight-col>
         <col highlight-col>
+        <col highlight-col>
         <col>
       </colgroup>
       <thead>
         <tr>
+          <th>
+            <div class="generic-table--sort-header-outer">
+              <div class="generic-table--sort-header">
+                <%= sort_header_tag_with_lsg('lft', caption: I18n.t(:label_project_hierarchy)) %>
+              </div>
+            </div>
+          </th>
           <th>
             <div class="generic-table--sort-header-outer">
               <div class="generic-table--sort-header">
@@ -94,8 +103,8 @@ See doc/COPYRIGHT.rdoc for more details.
           <th>
             <div class="generic-table--sort-header-outer">
               <div class="generic-table--sort-header">
-                <span>
-                  <%=  l(:label_required_disk_storage) %>
+                <%= sort_header_tag_with_lsg('required_storage_bytes',
+                                             caption: I18n.t(:label_required_disk_storage)) %>
                 </span>
               </div>
             </div>
@@ -122,10 +131,12 @@ See doc/COPYRIGHT.rdoc for more details.
       <tbody>
         <% project_tree_when_sorted(@projects) do |project, level| %>
           <tr class="<%= project.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
+            <td class="lft project--hierarchy"><span></span></td>
             <td class="name"><span><%= link_to project, settings_project_path(project), :title => project.short_description %></span></td>
             <td><%= checked_image project.is_public? %></td>
             <td><%= render partial: '/storage/required_storage',
-                                          locals: { storage: project.required_storage} %></td>
+                                          locals: { storage: project.required_storage,
+                                                    show_tooltip: false } %></td>
             <td><%= format_date(project.created_on) %></td>
             <td><%= format_date(project.updated_on) %></td>
             <td class="buttons">

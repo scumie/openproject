@@ -36,7 +36,7 @@ See doc/COPYRIGHT.rdoc for more details.
   <label class="form--label" for="project_project_type_id" title="<%= l(:label_required_disk_storage) %>"><%= l('repositories.storage.title') %></label>
   <span class="form--field-container">
     <td align="center"><%= render partial: '/storage/required_storage',
-                                  locals: { storage: storage } %></td>
+                                  locals: { storage: storage, show_tooltip: true } %></td>
   </span>
 </div>
 <% end %>

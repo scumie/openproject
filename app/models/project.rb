@@ -935,7 +935,10 @@ class Project < ActiveRecord::Base
   def required_storage
     Rails.cache.fetch("project##{id}/project_storage",
                       expires_in: self.class.project_storage_expires_in) do
-      count_for(:required_project_storage).first
+      storage = count_for(:required_project_storage).first
+
+      update_attributes(required_storage_bytes: storage[:total])
+      storage
     end
   end
 

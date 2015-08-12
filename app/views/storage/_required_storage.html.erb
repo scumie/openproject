@@ -27,15 +27,19 @@ See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
 <% if storage.key?(:total) && storage[:total] > 0 %>
-<span class="tooltip--right"
-  data-tooltip="
-  <% (storage.keys - [:total]).each do |type| %>
-    <% if storage[type] > 0 %>
-    <%= l(type) %>: <%= number_to_human_size(storage[type], precision: 2) %>
-    &nbsp;
+<% if show_tooltip %>
+  <span class="tooltip--right"
+    data-tooltip="
+    <% (storage.keys - [:total]).each do |type| %>
+      <% if storage[type] > 0 %>
+      <%= l(type) %>: <%= number_to_human_size(storage[type], precision: 2) %>
+      &nbsp;
+      <% end %>
     <% end %>
-  <% end %>
-  ">
+    ">
+<% else %>
+  <span>
   <%= number_to_human_size(storage[:total], precision: 2) %>
+<% end %>
 </span>
 <% end %>
